@@ -3,6 +3,7 @@ class Table extends React.Component {
     super(props);
     this.state = {
       data: [],
+      loaded: true,
       tmp: []
     };
   }
@@ -11,7 +12,7 @@ class Table extends React.Component {
     oboe("data").node("employees.*", function(record) {
       var tmp = this.state.tmp;
       tmp.push(record);
-      
+
       if(tmp.length === 100) {
         var data = this.state.data.concat(tmp);
         this.setState({
@@ -19,8 +20,10 @@ class Table extends React.Component {
           tmp: []
         }); 
       } else {
-        this.setState({tmp: tmp});
+        this.setState({tmp: tmp, loaded: false});
       }
+    }.bind(this)).node("employees", function() {
+      this.setState({loaded: true})
     }.bind(this));
   }
 
@@ -52,7 +55,10 @@ class Table extends React.Component {
     return (
       <div>
       <h1>Example Oboe.js table</h1>
-      <h2>{this.state.data.length} records</h2>
+      <h2>
+        {this.state.data.length} records 
+        {this.state.loaded ? "" : " (loading...)"}
+      </h2>
       <table className="gradienttable">
         <tbody>
         <tr>

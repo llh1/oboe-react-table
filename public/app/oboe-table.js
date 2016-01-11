@@ -1,8 +1,9 @@
-var ____ClassV=React.Component;for(var ____ClassV____Key in ____ClassV){if(____ClassV.hasOwnProperty(____ClassV____Key)){Table[____ClassV____Key]=____ClassV[____ClassV____Key];}}var ____SuperProtoOf____ClassV=____ClassV===null?null:____ClassV.prototype;Table.prototype=Object.create(____SuperProtoOf____ClassV);Table.prototype.constructor=Table;Table.__superConstructor__=____ClassV;
+var ____Class14=React.Component;for(var ____Class14____Key in ____Class14){if(____Class14.hasOwnProperty(____Class14____Key)){Table[____Class14____Key]=____Class14[____Class14____Key];}}var ____SuperProtoOf____Class14=____Class14===null?null:____Class14.prototype;Table.prototype=Object.create(____SuperProtoOf____Class14);Table.prototype.constructor=Table;Table.__superConstructor__=____Class14;
   function Table(props) {"use strict";
-    ____ClassV.call(this,props);
+    ____Class14.call(this,props);
     this.state = {
       data: [],
+      loaded: true,
       tmp: []
     };
   }
@@ -11,7 +12,7 @@ var ____ClassV=React.Component;for(var ____ClassV____Key in ____ClassV){if(____C
     oboe("data").node("employees.*", function(record) {
       var tmp = this.state.tmp;
       tmp.push(record);
-      
+
       if(tmp.length === 100) {
         var data = this.state.data.concat(tmp);
         this.setState({
@@ -19,8 +20,10 @@ var ____ClassV=React.Component;for(var ____ClassV____Key in ____ClassV){if(____C
           tmp: []
         }); 
       } else {
-        this.setState({tmp: tmp});
+        this.setState({tmp: tmp, loaded: false});
       }
+    }.bind(this)).node("employees", function() {
+      this.setState({loaded: true})
     }.bind(this));
   };
 
@@ -52,7 +55,10 @@ var ____ClassV=React.Component;for(var ____ClassV____Key in ____ClassV){if(____C
     return (
       React.createElement("div", null, 
       React.createElement("h1", null, "Example Oboe.js table"), 
-      React.createElement("h2", null, this.state.data.length, " records"), 
+      React.createElement("h2", null, 
+        this.state.data.length, " records",  
+        this.state.loaded ? "" : " (loading...)"
+      ), 
       React.createElement("table", {className: "gradienttable"}, 
         React.createElement("tbody", null, 
         React.createElement("tr", null, 
